@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -47,7 +48,7 @@ void walk(char * moves, char x, char y, int chips, char depth) {
         }
     }
     // cutoff for dead branches
-    int distance = abs(x - goal_x) + abs (y - goal_y) - 1;
+    int distance = abs(x - goal_x) + abs(y - goal_y) - 1;
     int cost;
         cost = distance * (average + depth + distance / 2);
     if(chips - cost <= -10)
