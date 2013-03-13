@@ -41,8 +41,7 @@ def walk(moves, x, y, chips, depth):
     if x == goal_x and y == goal_y:
         if chips == 0:
             solutions += 1
-            moves[depth] = 0
-            # print moves
+            # print moves[:depth]
             return
         else:
             return

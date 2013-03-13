@@ -50,9 +50,8 @@ func walk(moves *[40]byte, x int, y int, chips int, depth int) {
     }
     if x == goal_x && y == goal_y {
         if chips == 0 {
-            moves[depth] = 0
             solutions += 1
-            // fmt.Printf("%s\n", *moves)
+            //fmt.Printf("%s\n", moves[:depth])
             return
         } else {
             return
