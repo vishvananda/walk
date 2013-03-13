@@ -1,4 +1,5 @@
 import time
+import sys
 
 data = """* 8 1 7 8 8 5 2 9 5 9 5
 8 5 1 1 5 6 9 4 4 5 2 1
@@ -40,6 +41,8 @@ def walk(moves, x, y, chips, depth):
     if x == goal_x and y == goal_y:
         if chips == 0:
             solutions += 1
+            moves[depth] = 0
+            # print moves
             return
         else:
             return
@@ -66,5 +69,5 @@ walk(bytearray(40), start_x, start_y, chips, 0)
 solutions = 0
 a = time.time()
 walk(bytearray(40), start_x, start_y, chips, 0)
-print time.time() - a
-print solutions
+print >> sys.stderr, time.time() - a
+print >> sys.stderr, solutions

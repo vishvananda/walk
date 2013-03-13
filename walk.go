@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "os"
     "time"
 )
 
@@ -51,6 +52,7 @@ func walk(moves *[40]byte, x int, y int, chips int, depth int) {
         if chips == 0 {
             moves[depth] = 0
             solutions += 1
+            // fmt.Printf("%s\n", *moves)
             return
         } else {
             return
@@ -65,24 +67,20 @@ func walk(moves *[40]byte, x int, y int, chips int, depth int) {
     }
 
     if x < width - 1 {
-        var n[40] byte = *moves
-        n[depth] = 'e'
-        walk(&n, x + 1, y, chips, depth + 1)
+        moves[depth] = 'e'
+        walk(moves, x + 1, y, chips, depth + 1)
     }
     if y < height - 1 {
-        var n[40] byte = *moves
-        n[depth] = 's'
-        walk(&n, x, y + 1, chips, depth + 1)
+        moves[depth] = 's'
+        walk(moves, x, y + 1, chips, depth + 1)
     }
     if x > 0 {
-        var n[40] byte = *moves
-        n[depth] = 'w'
-        walk(&n, x - 1, y, chips, depth + 1)
+        moves[depth] = 'w'
+        walk(moves, x - 1, y, chips, depth + 1)
     }
     if y > 0 {
-        var n[40] byte = *moves
-        n[depth] = 'n'
-        walk(&n, x, y - 1, chips, depth + 1)
+        moves[depth] = 'n'
+        walk(moves, x, y - 1, chips, depth + 1)
     }
     return
 }
@@ -95,6 +93,6 @@ func main() {
     var moves[40] byte
     now := time.Now()
     walk(&moves, start_x, start_y, start_chips, 0)
-    fmt.Printf("%f\n", float64(time.Since(now)) / 1000000000.0)
-    fmt.Printf("%d\n", solutions)
+    fmt.Fprintf(os.Stderr, "%f\n", float64(time.Since(now)) / 1000000000.0)
+    fmt.Fprintf(os.Stderr, "%d\n", solutions)
 }

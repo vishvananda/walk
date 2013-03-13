@@ -40,6 +40,7 @@ void walk(char * moves, char x, char y, int chips, char depth) {
         if (chips == 0) {
             solutions += 1;
             moves[depth] = 0;
+            //printf("%s\n", moves);
             return;
         } else {
             return;
@@ -53,28 +54,20 @@ void walk(char * moves, char x, char y, int chips, char depth) {
         return;
 
     if(x < width - 1) {
-        char n[40];
-        memcpy(n, moves, 40);
-        n[depth] = 'e';
-        walk(n, x + 1, y, chips, depth + 1);
+        moves[depth] = 'e';
+        walk(moves, x + 1, y, chips, depth + 1);
     }
     if(y < height - 1) {
-        char n[40];
-        memcpy(n, moves, 40);
-        n[depth] = 's';
-        walk(n, x, y + 1, chips, depth + 1);
+        moves[depth] = 's';
+        walk(moves, x, y + 1, chips, depth + 1);
     }
     if(x > 0) {
-        char n[40];
-        memcpy(n, moves, 40);
-        n[depth] = 'w';
-        walk(n, x - 1, y, chips, depth + 1);
+        moves[depth] = 'w';
+        walk(moves, x - 1, y, chips, depth + 1);
     }
     if(y > 0) {
-        char n[40];
-        memcpy(n, moves, 40);
-        n[depth] = 'n';
-        walk(n, x, y - 1, chips, depth + 1);
+        moves[depth] = 'n';
+        walk(moves, x, y - 1, chips, depth + 1);
     }
     return;
 }
@@ -89,8 +82,8 @@ int main(int argc, char * argv[]) {
     c0 = clock();
     walk(moves, start_x, start_y, start_chips, 0);
     c1 = clock();
-    printf("%f\n", (float) (c1 - c0)/CLOCKS_PER_SEC);
-    printf("%d\n", solutions);
+    fprintf(stderr, "%f\n", (float) (c1 - c0)/CLOCKS_PER_SEC);
+    fprintf(stderr, "%d\n", solutions);
 
     return 0;
 }
