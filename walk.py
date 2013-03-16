@@ -16,7 +16,9 @@ data = """* 8 1 7 8 8 5 2 9 5 9 5
 chips = 444
 
 height = len(data.split('\n'))
+last_height = height - 1
 width = len(data.split('\n')[0].split())
+last_width = width - 1
 data = data.replace(' ', '').replace('\n', '')
 start = data.index('*')
 goal = data.index('^')
@@ -35,32 +37,31 @@ def walk(moves, x, y, chips, depth):
     if solutions >= 100000:
         return
     chips -= data[y * width + x]
-    if (not (x == start_x and y == start_y) and
-        not (x == goal_x and y == goal_y)):
-        chips -= depth - 1
     if x == goal_x and y == goal_y:
         if chips == 0:
             solutions += 1
-            # print moves[:depth]
-            return
-        else:
-            return
+            #print moves[:depth]
+        return
+    elif x != start_x or y != start_y:
+        chips -= depth - 1
+
     distance = abs(x - goal_x) + abs(y - goal_y) - 1
     cost = distance * (average + depth + distance / 2)
     if chips - cost <= -10:
         return
-    if x < width - 1:
+    next_depth = depth + 1
+    if x < last_width:
         moves[depth] = 'e'
-        walk(moves, x + 1, y, chips, depth + 1)
-    if y < height - 1:
+        walk(moves, x + 1, y, chips, next_depth)
+    if y < last_height:
         moves[depth] = 's'
-        walk(moves, x, y + 1, chips, depth + 1)
+        walk(moves, x, y + 1, chips, next_depth)
     if x > 0:
         moves[depth] = 'w'
-        walk(moves, x - 1, y, chips, depth + 1)
+        walk(moves, x - 1, y, chips, next_depth)
     if y > 0:
         moves[depth] = 'n'
-        walk(moves, x, y - 1, chips, depth + 1)
+        walk(moves, x, y - 1, chips, next_depth)
 
 # prerun once to let pypy jit
 solutions = 99999
