@@ -3,17 +3,17 @@
 #include <string.h>
 #include <time.h>
 
-#define true 1
-#define false 0
+const char true = 1;
+const char false = 0;
 
-#define height 12
-#define width 12
-#define start_x 0
-#define start_y 0
-#define goal_x 11
-#define goal_y 11
-#define average 5
-#define start_chips 444
+const char height = 12;
+const char width = 12;
+const char start_x = 0;
+const char start_y = 0;
+const char goal_x = 11;
+const char goal_y = 11;
+const char average = 5;
+const int start_chips = 444;
 const char * data =
     "081788529595"
     "851156944521"
@@ -27,13 +27,13 @@ const char * data =
     "529836149563"
     "469854976468"
     "277199737225";
-#define n 0
-#define e 1
-#define s 2
-#define w 3
+const char n = 0;
+const char e = 1;
+const char s = 2;
+const char w = 3;
 
 
-char intdata[width * height];
+char intdata[144];
 
 int solutions = 0;
 void walk(unsigned long long moves, char x, char y, int chips, char depth) {
