@@ -28,14 +28,14 @@ goal_x = goal % width
 goal_y = goal // width
 data = data.replace('*', '0')
 data = data.replace('^', '5')
-data = bytearray(ord(c) - 48 for c in data)
+data = [ord(c) - 48 for c in data]
 average = sum(data) / len(data)
 
 n = 0
 e = 1
 s = 2
 w = 3
-charmoves = bytearray("nesw")
+charmoves = "nesw"
 
 
 def print_solution(moves, depth):

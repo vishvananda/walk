@@ -5,7 +5,7 @@ A large graph walk implemented in multiple languages to compare performance.
 ## Python ##
 
     $ python walk.py
-    23.0141649246
+    22.7430679798
     100000
 
 ## PyPy ##
