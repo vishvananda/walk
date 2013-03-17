@@ -28,6 +28,10 @@ const (
     "529836149563" +
     "469854976468" +
     "277199737225"
+    n = 0
+    e = 1
+    s = 2
+    w = 3
 )
 
 var (
@@ -40,7 +44,7 @@ func abs(x int) int {
     return -x
 }
 
-func walk(moves *[40]byte, x int, y int, chips int, depth int) {
+func walk(moves uint64, x int, y int, chips int, depth int) {
     if solutions >= 100000 {
         return
     }
@@ -48,7 +52,7 @@ func walk(moves *[40]byte, x int, y int, chips int, depth int) {
     if x == goal_x && y == goal_y {
         if chips == 0 {
             solutions += 1
-            //fmt.Printf("%s\n", moves[:depth])
+            //fmt.Printf("%d\n", moves)
         }
         return
     } else if x != start_x || y != start_y {
@@ -64,21 +68,18 @@ func walk(moves *[40]byte, x int, y int, chips int, depth int) {
     }
 
     var next_depth int = depth + 1
+    moves <<= 2
     if x < width - 1 {
-        moves[depth] = 'e'
-        walk(moves, x + 1, y, chips, next_depth)
+        walk(moves + e, x + 1, y, chips, next_depth)
     }
     if y < height - 1 {
-        moves[depth] = 's'
-        walk(moves, x, y + 1, chips, next_depth)
+        walk(moves + s, x, y + 1, chips, next_depth)
     }
     if x > 0 {
-        moves[depth] = 'w'
-        walk(moves, x - 1, y, chips, next_depth)
+        walk(moves + w, x - 1, y, chips, next_depth)
     }
     if y > 0 {
-        moves[depth] = 'n'
-        walk(moves, x, y - 1, chips, next_depth)
+        walk(moves + n, x, y - 1, chips, next_depth)
     }
     return
 }
@@ -88,9 +89,8 @@ func main() {
     for i = 0; i < len(data); i++ {
         intdata[i] = data[i] - '0'
     }
-    var moves[40] byte
     now := time.Now()
-    walk(&moves, start_x, start_y, start_chips, 0)
+    walk(0, start_x, start_y, start_chips, 0)
     fmt.Fprintf(os.Stderr, "%f\n", float64(time.Since(now)) / 1000000000.0)
     fmt.Fprintf(os.Stderr, "%d\n", solutions)
 }

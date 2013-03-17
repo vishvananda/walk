@@ -31,6 +31,20 @@ data = data.replace('^', '5')
 data = bytearray(ord(c) - 48 for c in data)
 average = sum(data) / len(data)
 
+n = 0
+e = 1
+s = 2
+w = 3
+charmoves = bytearray("nesw")
+
+
+def print_solution(moves, depth):
+    result = bytearray(depth)
+    for i in xrange(depth - 1, -1, -1):
+        result[i] = charmoves[moves & 3]
+        moves >>= 2
+    print result
+
 solutions = 0
 def walk(moves, x, y, chips, depth):
     global solutions
@@ -40,7 +54,8 @@ def walk(moves, x, y, chips, depth):
     if x == goal_x and y == goal_y:
         if chips == 0:
             solutions += 1
-            #print moves[:depth]
+            #print_solution(moves, depth)
+            #print moves
         return
     elif x != start_x or y != start_y:
         chips -= depth - 1
@@ -50,24 +65,21 @@ def walk(moves, x, y, chips, depth):
     if chips - cost <= -10:
         return
     next_depth = depth + 1
+    moves <<= 2
     if x < last_width:
-        moves[depth] = 'e'
-        walk(moves, x + 1, y, chips, next_depth)
+        walk(moves + e, x + 1, y, chips, next_depth)
     if y < last_height:
-        moves[depth] = 's'
-        walk(moves, x, y + 1, chips, next_depth)
+        walk(moves + s, x, y + 1, chips, next_depth)
     if x > 0:
-        moves[depth] = 'w'
-        walk(moves, x - 1, y, chips, next_depth)
+        walk(moves + w, x - 1, y, chips, next_depth)
     if y > 0:
-        moves[depth] = 'n'
-        walk(moves, x, y - 1, chips, next_depth)
+        walk(moves + n, x, y - 1, chips, next_depth)
 
 # prerun once to let pypy jit
 solutions = 99999
-walk(bytearray(40), start_x, start_y, chips, 0)
+walk(0, start_x, start_y, chips, 0)
 solutions = 0
 a = time.time()
-walk(bytearray(40), start_x, start_y, chips, 0)
+walk(0, start_x, start_y, chips, 0)
 print >> sys.stderr, time.time() - a
 print >> sys.stderr, solutions

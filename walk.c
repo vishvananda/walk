@@ -27,19 +27,23 @@ const char * data =
     "529836149563"
     "469854976468"
     "277199737225";
+#define n 0
+#define e 1
+#define s 2
+#define w 3
+
 
 char intdata[width * height];
 
 int solutions = 0;
-void walk(char * moves, char x, char y, int chips, char depth) {
+void walk(unsigned long long moves, char x, char y, int chips, char depth) {
     if(solutions >= 100000)
         return;
     chips -= intdata[y * width + x];
     if(x == goal_x && y == goal_y) {
         if (chips == 0) {
             solutions += 1;
-            //moves[depth] = 0;
-            //printf("%s\n", moves);
+            //printf("%lld\n", moves);
         }
         return;
     } else if(x != start_x || y != start_y) {
@@ -53,21 +57,18 @@ void walk(char * moves, char x, char y, int chips, char depth) {
         return;
 
     int next_depth = depth + 1;
+    moves <<= 2;
     if(x < width - 1) {
-        moves[depth] = 'e';
-        walk(moves, x + 1, y, chips, next_depth);
+        walk(moves + e, x + 1, y, chips, next_depth);
     }
     if(y < height - 1) {
-        moves[depth] = 's';
-        walk(moves, x, y + 1, chips, next_depth);
+        walk(moves + s, x, y + 1, chips, next_depth);
     }
     if(x > 0) {
-        moves[depth] = 'w';
-        walk(moves, x - 1, y, chips, next_depth);
+        walk(moves + w, x - 1, y, chips, next_depth);
     }
     if(y > 0) {
-        moves[depth] = 'n';
-        walk(moves, x, y - 1, chips, next_depth);
+        walk(moves + n, x, y - 1, chips, next_depth);
     }
     return;
 }
@@ -77,10 +78,9 @@ int main(int argc, char * argv[]) {
     for(i = 0; i < sizeof(intdata); i++) {
         intdata[i] = data[i] - '0';
     }
-    char moves[40] = "";
     clock_t c0, c1;
     c0 = clock();
-    walk(moves, start_x, start_y, start_chips, 0);
+    walk(0, start_x, start_y, start_chips, 0);
     c1 = clock();
     fprintf(stderr, "%f\n", (float) (c1 - c0)/CLOCKS_PER_SEC);
     fprintf(stderr, "%d\n", solutions);
