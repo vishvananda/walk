@@ -36,61 +36,53 @@ const (
 
 var (
     solutions = 0
-    intdata [144]byte
+    intdata [144]int
 )
 
-func abs(x int) int {
-    if (x > 0) { return x }
-    return -x
-}
-
-func walk(moves uint64, x int, y int, chips int, depth int) {
+func walk(moves uint64, position int, chips int, depth int, backs int) {
     if solutions >= 100000 {
         return
     }
-    chips -= int(data[y * width + x] - '0')
-    if x == goal_x && y == goal_y {
+    chips -= intdata[position]
+    if position == goal_y * width + goal_x {
         if chips == 0 {
             solutions += 1
             //fmt.Printf("%d\n", moves)
         }
         return
-    } else if x != start_x || y != start_y {
-        chips -= depth - 1
+    } else if position != start_y * width + start_x {
+        chips -= int(depth - 1)
     }
 
-    // cutoff for dead branches
-    var distance int = abs(x - goal_x) + abs(y - goal_y) - 1
-    var cost int
-    cost = distance * (average + depth + distance / 2);
-    if chips - cost <= -10 {
+    if chips < 5 {
         return
     }
 
     var next_depth int = depth + 1
     moves <<= 2
+    var x int = position % 12
     if x < width - 1 {
-        walk(moves + e, x + 1, y, chips, next_depth)
+        walk(moves + e, position + 1, chips, next_depth, backs)
     }
-    if y < height - 1 {
-        walk(moves + s, x, y + 1, chips, next_depth)
+    if position < height * (width - 1) {
+        walk(moves + s, position + width, chips, next_depth, backs)
     }
-    if x > 0 {
-        walk(moves + w, x - 1, y, chips, next_depth)
+    if backs < 2 {
+        if x > 0 {
+            walk(moves + w, position - 1, chips, next_depth, backs + 1)
+        }
+        if position > width - 1 {
+            walk(moves + n, position - width, chips, next_depth, backs + 1)
+        }
     }
-    if y > 0 {
-        walk(moves + n, x, y - 1, chips, next_depth)
-    }
-    return
 }
 
 func main() {
     var i int
     for i = 0; i < len(data); i++ {
-        intdata[i] = data[i] - '0'
+        intdata[i] = int(data[i] - '0')
     }
     now := time.Now()
-    walk(0, start_x, start_y, start_chips, 0)
+    walk(0, 0, start_chips, 0, 0)
     fmt.Fprintf(os.Stderr, "%f\n", float64(time.Since(now)) / 1000000000.0)
-    fmt.Fprintf(os.Stderr, "%d\n", solutions)
 }

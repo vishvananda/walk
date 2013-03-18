@@ -19,13 +19,11 @@ height = len(data.split('\n'))
 last_height = height - 1
 width = len(data.split('\n')[0].split())
 last_width = width - 1
+first_row = last_width
+last_row = height * last_width
 data = data.replace(' ', '').replace('\n', '')
 start = data.index('*')
 goal = data.index('^')
-start_x = start % width
-start_y = start // width
-goal_x = goal % width
-goal_y = goal // width
 data = data.replace('*', '0')
 data = data.replace('^', '5')
 data = [ord(c) - 48 for c in data]
@@ -46,40 +44,40 @@ def print_solution(moves, depth):
     print result
 
 solutions = 0
-def walk(moves, x, y, chips, depth):
+def walk(moves, position, chips, depth, backs):
     global solutions
     if solutions >= 100000:
         return
-    chips -= data[y * width + x]
-    if x == goal_x and y == goal_y:
+    chips -= data[position]
+    if position == goal:
         if chips == 0:
             solutions += 1
             #print_solution(moves, depth)
             #print moves
         return
-    elif x != start_x or y != start_y:
+    elif position != start:
         chips -= depth - 1
 
-    distance = abs(x - goal_x) + abs(y - goal_y) - 1
-    cost = distance * (average + depth + distance / 2)
-    if chips - cost <= -10:
+    if chips < 5:
         return
+
     next_depth = depth + 1
     moves <<= 2
+    x = position % 12
     if x < last_width:
-        walk(moves + e, x + 1, y, chips, next_depth)
-    if y < last_height:
-        walk(moves + s, x, y + 1, chips, next_depth)
-    if x > 0:
-        walk(moves + w, x - 1, y, chips, next_depth)
-    if y > 0:
-        walk(moves + n, x, y - 1, chips, next_depth)
+        walk(moves + e, position + 1, chips, next_depth, backs)
+    if position < last_row:
+        walk(moves + s, position + width, chips, next_depth, backs)
+    if backs < 2:
+        if x > 0:
+            walk(moves + w, position - 1, chips, next_depth, backs + 1)
+        if position > first_row:
+            walk(moves + n, position - width, chips, next_depth, backs + 1)
 
 # prerun once to let pypy jit
 solutions = 99999
-walk(0, start_x, start_y, chips, 0)
+walk(0, 0, chips, 0, 0)
 solutions = 0
 a = time.time()
-walk(0, start_x, start_y, chips, 0)
+walk(0, 0, chips, 0, 0)
 print >> sys.stderr, time.time() - a
-print >> sys.stderr, solutions

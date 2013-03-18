@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 
 #define true 1
@@ -32,45 +31,45 @@ const char * data =
 #define s 2
 #define w 3
 
-
 char intdata[width * height];
 
 int solutions = 0;
-void walk(unsigned long long moves, char x, char y, int chips, char depth) {
+
+void walk(unsigned long long moves, int position, int chips, char depth, char backs) {
     if(solutions >= 100000)
         return;
-    chips -= intdata[y * width + x];
-    if(x == goal_x && y == goal_y) {
+    chips -= intdata[position];
+
+    if(position == goal_y * width + goal_x) {
         if (chips == 0) {
             solutions += 1;
             //printf("%lld\n", moves);
         }
         return;
-    } else if(x != start_x || y != start_y) {
+    } else if(position != start_y * width + start_x) {
         chips -= depth - 1;
     }
-    // cutoff for dead branches
-    int distance = abs(x - goal_x) + abs(y - goal_y) - 1;
-    int cost;
-        cost = distance * (average + depth + distance / 2);
-    if(chips - cost <= -10)
+
+    if(chips < 5)
         return;
 
     int next_depth = depth + 1;
     moves <<= 2;
+    char x = position % 12;
     if(x < width - 1) {
-        walk(moves + e, x + 1, y, chips, next_depth);
+        walk(moves + e, position + 1, chips, next_depth, backs);
     }
-    if(y < height - 1) {
-        walk(moves + s, x, y + 1, chips, next_depth);
+    if(position < height * (width - 1)) {
+        walk(moves + s, position + width, chips, next_depth, backs);
     }
-    if(x > 0) {
-        walk(moves + w, x - 1, y, chips, next_depth);
+    if(backs < 2) {
+        if(x > 0) {
+            walk(moves + w, position - 1, chips, next_depth, backs + 1);
+        }
+        if(position > width - 1) {
+            walk(moves + n, position - width, chips, next_depth, backs + 1);
+        }
     }
-    if(y > 0) {
-        walk(moves + n, x, y - 1, chips, next_depth);
-    }
-    return;
 }
 
 int main(int argc, char * argv[]) {
@@ -80,10 +79,9 @@ int main(int argc, char * argv[]) {
     }
     clock_t c0, c1;
     c0 = clock();
-    walk(0, start_x, start_y, start_chips, 0);
+    walk(0, 0, start_chips, 0, 0);
     c1 = clock();
     fprintf(stderr, "%f\n", (float) (c1 - c0)/CLOCKS_PER_SEC);
-    fprintf(stderr, "%d\n", solutions);
 
     return 0;
 }
