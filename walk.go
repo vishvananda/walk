@@ -13,7 +13,6 @@ const (
     start_y = 0
     goal_x = 11
     goal_y = 11
-    average = 5
     start_chips = 444
     data =
     "081788529595" +

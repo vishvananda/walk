@@ -11,7 +11,6 @@
 #define start_y 0
 #define goal_x 11
 #define goal_y 11
-#define average 5
 #define start_chips 444
 const char * data =
     "081788529595"

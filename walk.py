@@ -27,7 +27,6 @@ goal = data.index('^')
 data = data.replace('*', '0')
 data = data.replace('^', '5')
 data = [ord(c) - 48 for c in data]
-average = sum(data) / len(data)
 
 n = 0
 e = 1
