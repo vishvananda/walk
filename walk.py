@@ -43,9 +43,10 @@ def print_solution(moves, depth):
     print result
 
 solutions = 0
+end = 100000
 def walk(moves, position, chips, depth, backs):
     global solutions
-    if solutions >= 100000:
+    if solutions >= end:
         return
     chips -= data[position]
     if position == goal:
@@ -73,10 +74,12 @@ def walk(moves, position, chips, depth, backs):
         if position > first_row:
             walk(moves + n, position - width, chips, next_depth, backs + 1)
 
-# prerun once to let pypy jit
-solutions = 99999
+# prerun a few times to let pypy jit
+solutions = 0
+end = 100
 walk(0, 0, chips, 0, 0)
 solutions = 0
+end = 100000
 a = time.time()
 walk(0, 0, chips, 0, 0)
 print >> sys.stderr, time.time() - a
