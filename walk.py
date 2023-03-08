@@ -40,7 +40,7 @@ def print_solution(moves, depth):
     for i in xrange(depth - 1, -1, -1):
         result[i] = charmoves[moves & 3]
         moves >>= 2
-    print result
+    print(result)
 
 solutions = 0
 end = 100000
@@ -82,4 +82,4 @@ solutions = 0
 end = 100000
 a = time.time()
 walk(0, 0, chips, 0, 0)
-print >> sys.stderr, time.time() - a
+print(time.time() - a, file=sys.stderr)

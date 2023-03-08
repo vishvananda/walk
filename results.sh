@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-C_BUILD="gcc -O6 -o walk walk.c"
+C_BUILD="gcc -O3 -o walk walk.c"
 C_EXEC="./walk"
 GO="go run -gcflags -m walk.go"
-PYPY="pypy walk.py"
-PYTHON="python walk.py"
+PYPY="pypy3 walk.py"
+PYTHON="python3 walk.py"
 `$C_BUILD`
 C_TIME=`$C_EXEC 2>&1 | tail -n1`
 GO_TIME=`$GO 2>&1 | tail -n1`
@@ -18,7 +18,7 @@ PYPY_DIFF=`echo "scale=2; $PYPY_TIME/$C_TIME" | bc -l`
 PYTHON_DIFF=`echo "scale=2; $PYTHON_TIME/$C_TIME" | bc -l`
 
 cat > README.md <<EOF
-# Walk #
+# Walk (2023 Version) #
 
 A large graph walk implemented in multiple languages to compare performance.
 

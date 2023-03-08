@@ -1,35 +1,35 @@
-# Walk #
+# Walk (2023 Version) #
 
 A large graph walk implemented in multiple languages to compare performance.
 
 ## C ##
 
-    $ gcc -O6 -o walk walk.c; ./walk
+    $ gcc -O3 -o walk walk.c; ./walk
 
-0.041135
+0.051575
 BASELINE
 
 ## Go ##
 
     $ go run -gcflags -m walk.go
 
-0.052420
-78.47% speed of C
-1.27X slower than C
+0.030771
+167.60% speed of C
+.59X slower than C
 
 ## PyPy ##
 
-    $ pypy walk.py
+    $ pypy3 walk.py
 
-0.726972103119
-7.21% speed of GO
-17.67X slower than C
+0.3357088565826416
+9.16% speed of GO
+6.50X slower than C
 
 ## Python ##
 
-    $ python walk.py
+    $ python3 walk.py
 
-5.77282810211:
-12.59% speed of PyPy
-140.33X slower than C
+1.912165880203247:
+17.55% speed of PyPy
+37.07X slower than C
 
